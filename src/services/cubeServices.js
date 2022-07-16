@@ -40,4 +40,22 @@ exports.writeToDb = (cube) => {
 
 exports.getById = (id) => cubes.filter(x => Number(x.id) == Number(id))[0];
 
+exports.search = (name, from, to) => {
+    let filtered = cubes;
+    console.log(filtered);
+    if (name) {
+        filtered = filtered.filter(x => x.name.toLowerCase() == name.toLowerCase())
+    }
+    if (from) {
+        filtered = filtered.filter(x => x.difficultyLevel >= from)
+ 
+    }
+    if (to) {
+        filtered = filtered.filter(x => x.difficultyLevel <= to)
+ 
+    }
+
+    return filtered;
+}
+
 const getNextId = () => cubes[cubes.length - 1].id + 1;
