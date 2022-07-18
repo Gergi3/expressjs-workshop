@@ -1,7 +1,16 @@
 const Cube = require('../models/Cube');
 
-exports.getAll = async () => {
-    const cubes = await Cube.find();
+exports.getAll = async (search, from, to) => {
+    console.log(from);
+    console.log(to);
+    const query = Cube.find({
+        $and: [
+            { name: { $regex: search, $options: 'i' } },
+            { difficultyLevel: { $gte: Number(from) || 1 } },
+            { difficultyLevel: { $lte: Number(to) || 6 } }
+        ]
+    });
+    const cubes = await query;
     const cubesArray = cubes.map(cube => cube.toObject());
 
     return cubesArray;
