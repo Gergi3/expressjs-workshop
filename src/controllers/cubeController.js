@@ -1,27 +1,25 @@
 const express = require('express');
-const router = express.Router();
-
 const cubeServices = require('../services/cubeServices');
+const Cube = require('../models/Cube');
+const router = express.Router();
 
 router.get('/create', (req, res) => {
     res.render('createCube');
 });
 
 router.post('/create', (req, res) => {
-    const { name, description, imageUrl, difficultyLevel } = req.body;
-    
-    const newCube = cubeServices.createObj(name, description, imageUrl, difficultyLevel);
+    const newCube = new Cube(req.body);
 
     const isValid = cubeServices.validate(newCube);
     if (!isValid) {
         res.redirect('/404');
     }
 
-    cubeServices.writeToDb(newCube)
-        .then(x => {
+    newCube.save()
+        .then(() => {
             res.redirect('/');
         })
-        .catch(err => {
+        .catch(() => {
             res.redirect('/404');
         })
 });
