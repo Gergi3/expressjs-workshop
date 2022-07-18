@@ -18,7 +18,7 @@ exports.getAll = async (search, from, to) => {
     return cubesArray;
 };
 
-exports.createCube = (body) => new Cube(body);
+exports.create = (body) => new Cube(body);
 
 exports.getById = async (id) => {
     const cube = await Cube.findById(id);

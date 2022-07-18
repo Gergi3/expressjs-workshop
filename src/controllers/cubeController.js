@@ -7,7 +7,7 @@ router.get('/create', (req, res) => {
 });
 
 router.post('/create', (req, res) => {
-    const newCube = cubeServices.createCube(req.body);
+    const newCube = cubeServices.create(req.body);
 
     const isValid = cubeServices.validate(newCube);
     if (!isValid) {
