@@ -1,16 +1,18 @@
 const Cube = require('../models/Cube');
 
 exports.getAll = async (search, from, to) => {
-    console.log(from);
-    console.log(to);
-    const query = Cube.find({
-        $and: [
-            { name: { $regex: search, $options: 'i' } },
-            { difficultyLevel: { $gte: Number(from) || 1 } },
-            { difficultyLevel: { $lte: Number(to) || 6 } }
-        ]
-    });
-    const cubes = await query;
+    let query = {};
+    if (search || from || to) {
+        query = {
+            $and: [
+                { name: { $regex: search || '', $options: 'i' } },
+                { difficultyLevel: { $gte: Number(from) || 1 } },
+                { difficultyLevel: { $lte: Number(to) || 6 } }
+            ]
+        };
+    }
+
+    const cubes = await Cube.find(query);
     const cubesArray = cubes.map(cube => cube.toObject());
 
     return cubesArray;
@@ -33,22 +35,4 @@ exports.validate = (cube) => {
     }
 
     return true;
-}
-
-
-exports.search = (name, from, to) => {
-    let filtered = cubes;
-    if (name) {
-        filtered = filtered.filter(x => x.name.toLowerCase() == name.toLowerCase())
-    }
-    if (from) {
-        filtered = filtered.filter(x => x.difficultyLevel >= from)
-
-    }
-    if (to) {
-        filtered = filtered.filter(x => x.difficultyLevel <= to)
-
-    }
-
-    return filtered;
 }
