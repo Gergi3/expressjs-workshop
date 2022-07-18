@@ -1,6 +1,9 @@
 const cubes = require('../db.json');
+const Cube = require('../models/Cube');
 
 exports.getAll = () => cubes;
+
+exports.createCube = (body) => new Cube(body);
 
 exports.getById = (id) => cubes.filter(x => Number(x.id) == Number(id))[0];
 
