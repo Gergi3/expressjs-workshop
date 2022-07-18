@@ -42,7 +42,6 @@ exports.getById = (id) => cubes.filter(x => Number(x.id) == Number(id))[0];
 
 exports.search = (name, from, to) => {
     let filtered = cubes;
-    console.log(filtered);
     if (name) {
         filtered = filtered.filter(x => x.name.toLowerCase() == name.toLowerCase())
     }
