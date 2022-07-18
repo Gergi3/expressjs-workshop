@@ -23,10 +23,15 @@ router.post('/create', (req, res) => {
         })
 });
 
-router.get('/details/:cubeId', (req, res) => {
-    const cube = cubeServices.getById(req.params.cubeId);
-    res.render('detailsCube', { cube });
-})
+router.get('/details/:cubeId', async (req, res) => {
+    try {
+        const cubeId = req.params.cubeId;
+        const cube = await cubeServices.getById(cubeId);
+        res.render('detailsCube', { cube });
+    } catch (err) {
+        res.send({});
+    }
 
+})
 
 exports.cubeRouter = router;

@@ -1,11 +1,20 @@
 const cubes = require('../db.json');
+const mongoose = require('mongoose');
 const Cube = require('../models/Cube');
 
-exports.getAll = () => cubes;
+exports.getAll = async () => {
+    const cubes = await Cube.find();
+    const cubesArray = cubes.map(cube => cube.toObject());
+
+    return cubesArray;
+};
 
 exports.createCube = (body) => new Cube(body);
 
-exports.getById = (id) => cubes.filter(x => Number(x.id) == Number(id))[0];
+exports.getById = async (id) => {
+    const cube = await Cube.findById(id);
+    return cube.toObject();
+};
 
 exports.validate = (cube) => {
     if (cube.name < 3 || cube.name > 20) {
@@ -27,11 +36,11 @@ exports.search = (name, from, to) => {
     }
     if (from) {
         filtered = filtered.filter(x => x.difficultyLevel >= from)
- 
+
     }
     if (to) {
         filtered = filtered.filter(x => x.difficultyLevel <= to)
- 
+
     }
 
     return filtered;
