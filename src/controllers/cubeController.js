@@ -31,7 +31,6 @@ router.get('/details/:cubeId', async (req, res) => {
     } catch (err) {
         res.send({});
     }
-
-})
+});
 
 exports.cubeRouter = router;

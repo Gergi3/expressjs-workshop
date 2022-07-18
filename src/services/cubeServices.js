@@ -1,5 +1,3 @@
-const cubes = require('../db.json');
-const mongoose = require('mongoose');
 const Cube = require('../models/Cube');
 
 exports.getAll = async () => {
