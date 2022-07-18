@@ -1,10 +1,13 @@
 const express = require('express');
+const connectToDb = require('./db.js');
 const hbs = require('express-handlebars');
 const path = require('path');
 const { router } = require('./routes');
 
 const app = express();
 const port = 5000;
+
+connectToDb();
 
 app.use(express.urlencoded({ extended: false }));
 
