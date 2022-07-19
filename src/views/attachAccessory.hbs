@@ -2,16 +2,19 @@
 <div class="form">
     <h2>{{cube.name}}</h2>
     <img class="cube" src="{{cube.imageUrl}}" alt="cubeImg">
-    <form action="/accessory/attach/{{cube._id}}" method="POST">
-        <label for="accessory">Accessories</label>
-        <select id="accessory" name="id">
-            {{#each accessories}}
-                <option value="{{_id}}">{{name}}</option>
-            {{/each}}
-        </select>
+    {{#if hasAllAccessories}}
+        <h3 class="italic">This cube has all available accessories so far or there is no available at all...</h3>
+    {{else}}
+        <form action="/accessory/attach/{{cube._id}}" method="POST">
+            <label for="accessory">Accessories</label>
+            <select id="accessory" name="id">
+                {{#each accessories}}
+                    <option value="{{_id}}">{{name}}</option>
+                {{/each}}
+            </select>
 
-        <input type="submit" value="Attach">
-    </form>
-    <h3 class="italic">This cube has all available accessories so far or there is no available at all...</h3>
+            <input type="submit" value="Attach">
+        </form>
+    {{/if}}
     <a class="btn" href="/cube/details/{{cube._id}}">Back</a>
 </div>

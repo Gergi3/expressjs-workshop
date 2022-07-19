@@ -1,4 +1,3 @@
-const { get } = require('express/lib/response');
 const Accessory = require('../models/Accessory');
 
 exports.getById = async (id) => {
