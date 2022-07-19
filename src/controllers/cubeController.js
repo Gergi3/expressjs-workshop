@@ -27,7 +27,7 @@ router.get('/details/:cubeId', async (req, res) => {
     try {
         const cubeId = req.params.cubeId;
         const cube = await cubeServices.getByIdPopulated(cubeId);
-        
+
         res.render('detailsCube', {
             cube: cube.toObject(),
             hasAccessories: cube.accessories.length > 0,
