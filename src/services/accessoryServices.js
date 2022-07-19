@@ -1,3 +1,4 @@
+const { get } = require('express/lib/response');
 const Accessory = require('../models/Accessory');
 
 exports.getById = async (id) => {
@@ -5,8 +6,21 @@ exports.getById = async (id) => {
     return accessory.toObject();
 };
 
-exports.getAll = async (except) => {
-    const accessories = await Accessory.find();
+exports.getAll = async () => {
+    const accessories = await Accessory.find(query);
+    const accessoriesArr = accessories.map(x => x.toObject());
+
+    return accessoriesArr;
+}
+
+exports.getAllExcept = async (excludedIds) => {
+    const excluded = excludedIds.map(x => {
+        return { "_id": x };
+    });
+    
+    const query = excluded.length > 0 ? { $nor: excluded } : {}
+
+    const accessories = await Accessory.find(query);
     const accessoriesArr = accessories.map(x => x.toObject());
 
     return accessoriesArr;

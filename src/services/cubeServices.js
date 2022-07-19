@@ -1,6 +1,5 @@
 const Cube = require('../models/Cube');
 
-
 exports.create = (body) => new Cube(body);
 
 exports.getById = (id) => Cube.findById(id);

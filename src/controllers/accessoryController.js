@@ -29,11 +29,11 @@ router.get('/attach/:cubeId', async (req, res) => {
     try {
         const cubeId = req.params.cubeId;
         const cube = await cubeServices.getById(cubeId);
-        const accessories = await accessoryServices.getAll();
+        const accessories = await accessoryServices.getAllExcept(cube.accessories);
 
         res.render('attachAccessory', { cube: cube.toObject(), accessories });
-    } catch {
-        res.redirect('/404');
+    } catch (err) {
+        console.log(err);
     }
 });
 
