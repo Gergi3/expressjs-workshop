@@ -3,7 +3,9 @@ const Cube = require('../models/Cube');
 
 exports.create = (body) => new Cube(body);
 
-exports.getById = async (id) => await Cube.findById(id);
+exports.getById = (id) => Cube.findById(id);
+
+exports.getByIdPopulated = (id) => Cube.findById(id).populate('accessories');
 
 exports.getAll = async (search, from, to) => {
     let query = {};
