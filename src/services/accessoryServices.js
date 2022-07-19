@@ -5,6 +5,13 @@ exports.getById = async (id) => {
     return accessory.toObject();
 };
 
+exports.getAll = async (except) => {
+    const accessories = await Accessory.find();
+    const accessoriesArr = accessories.map(x => x.toObject());
+
+    return accessoriesArr;
+}
+
 exports.validate = (accessory) => {
     if (accessory.name < 3 || accessory.name > 30) {
         return false;

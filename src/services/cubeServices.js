@@ -1,5 +1,10 @@
 const Cube = require('../models/Cube');
 
+
+exports.create = (body) => new Cube(body);
+
+exports.getById = async (id) => await Cube.findById(id);
+
 exports.getAll = async (search, from, to) => {
     let query = {};
     if (search || from || to) {
@@ -18,12 +23,15 @@ exports.getAll = async (search, from, to) => {
     return cubesArray;
 };
 
-exports.create = (body) => new Cube(body);
+exports.addAccessory = (cubeId, accessoryId) => {
+    const query = {
+        $push: {
+            accessories: accessoryId
+        }
+    };
 
-exports.getById = async (id) => {
-    const cube = await Cube.findById(id);
-    return cube.toObject();
-};
+    return Cube.findByIdAndUpdate(cubeId, query);
+}
 
 exports.validate = (cube) => {
     if (cube.name < 3 || cube.name > 20) {

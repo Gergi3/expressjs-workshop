@@ -1,5 +1,6 @@
 const express = require('express');
 const accessoryServices = require('../services/accessoryServices');
+const cubeServices = require('../services/cubeServices');
 
 const router = express.Router();
 
@@ -22,6 +23,30 @@ router.post('/create', (req, res) => {
         .catch(() => {
             res.redirect('/404');
         })
+});
+
+router.get('/attach/:cubeId', async (req, res) => {
+    try {
+        const cubeId = req.params.cubeId;
+        const cube = await cubeServices.getById(cubeId);
+        const accessories = await accessoryServices.getAll();
+
+        res.render('attachAccessory', { cube: cube.toObject(), accessories });
+    } catch {
+        res.redirect('/404');
+    }
+});
+
+router.post('/attach/:cubeId', async (req, res) => {
+    try {
+        const cubeId = req.params.cubeId;
+        const accessoryId = req.body.id;
+        await cubeServices.addAccessory(cubeId, accessoryId);    
+        
+        res.redirect(`/cube/details/${cubeId}`)
+    } catch {
+        res.redirect('/404');
+    }
 });
 
 
