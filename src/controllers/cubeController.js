@@ -17,7 +17,7 @@ router.post('/create', (req, res) => {
         })
         .catch(() => {
             res.redirect('/404');
-        })
+        });
 });
 
 router.get('/details/:cubeId', async (req, res) => {
@@ -47,7 +47,7 @@ router.post('/attach-accessory/:cubeId', async (req, res) => {
     const accessoryId = req.body.id;
     await cubeServices.addAccessory(cubeId, accessoryId);
 
-    res.redirect(`/cube/details/${cubeId}`)
+    res.redirect(`/cube/details/${cubeId}`);
 });
 
 exports.cubeRouter = router;

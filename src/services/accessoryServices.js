@@ -5,7 +5,7 @@ exports.getAllExcept = async (excludedIds) => {
         return { "_id": x };
     });
 
-    const query = excluded.length > 0 ? { $nor: excluded } : {}
+    const query = excluded.length > 0 ? { $nor: excluded } : {};
 
     const accessories = await Accessory.find(query);
     const accessoriesArr = accessories.map(x => x.toObject());

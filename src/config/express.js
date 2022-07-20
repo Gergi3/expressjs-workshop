@@ -12,4 +12,4 @@ const initConfig = () => {
 
 module.exports = {
     app, port, initConfig
-}
+};
