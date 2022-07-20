@@ -6,7 +6,7 @@ const accessoryServices = require('../services/accessoryServices');
 const mongooseServices = require('../services/mongooseServices');
 
 router.get('/create', (req, res) => {
-    res.render('createCube');
+    res.render('cube/create');
 });
 
 router.post('/create', (req, res) => {
@@ -25,7 +25,7 @@ router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
     const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
 
-    res.render('detailsCube', {
+    res.render('cube/details', {
         cube: cube.toObject(),
         hasAccessories: cube.accessories.length > 0,
     });
@@ -36,7 +36,7 @@ router.get('/attach-accessory/:cubeId', async (req, res) => {
     const cube = await cubeServices.getById(cubeId);
     const accessories = await accessoryServices.getAllExcept(cube.accessories);
     
-    res.render('attachAccessory', {
+    res.render('accessory/attach', {
         cube: cube.toObject(),
         accessories: mongooseServices.mapToObjects(accessories),
         hasAllAccessories: accessories.length == 0,
