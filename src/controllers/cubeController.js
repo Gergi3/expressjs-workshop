@@ -1,6 +1,8 @@
 const express = require('express');
-const cubeServices = require('../services/cubeServices');
 const router = express.Router();
+
+const cubeServices = require('../services/cubeServices');
+const accessoryServices = require('../services/accessoryServices');
 
 router.get('/create', (req, res) => {
     res.render('createCube');
@@ -8,11 +10,6 @@ router.get('/create', (req, res) => {
 
 router.post('/create', (req, res) => {
     const newCube = cubeServices.create(req.body);
-
-    const isValid = cubeServices.validate(newCube);
-    if (!isValid) {
-        res.redirect('/404');
-    }
 
     newCube.save()
         .then(() => {
@@ -24,17 +21,33 @@ router.post('/create', (req, res) => {
 });
 
 router.get('/details/:cubeId', async (req, res) => {
-    try {
-        const cubeId = req.params.cubeId;
-        const cube = await cubeServices.getByIdPopulated(cubeId);
+    const cubeId = req.params.cubeId;
+    const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
 
-        res.render('detailsCube', {
-            cube: cube.toObject(),
-            hasAccessories: cube.accessories.length > 0,
-        });
-    } catch (err) {
-        res.send({});
-    }
+    res.render('detailsCube', {
+        cube: cube.toObject(),
+        hasAccessories: cube.accessories.length > 0,
+    });
+});
+
+router.get('/attach-accessory/:cubeId', async (req, res) => {
+    const cubeId = req.params.cubeId;
+    const cube = await cubeServices.getById(cubeId);
+    const accessories = await accessoryServices.getAllExcept(cube.accessories);
+    
+    res.render('attachAccessory', {
+        cube: cube.toObject(),
+        accessories,
+        hasAllAccessories: accessories.length == 0,
+    });
+});
+
+router.post('/attach-accessory/:cubeId', async (req, res) => {
+    const cubeId = req.params.cubeId;
+    const accessoryId = req.body.id;
+    await cubeServices.addAccessory(cubeId, accessoryId);
+
+    res.redirect(`/cube/details/${cubeId}`)
 });
 
 exports.cubeRouter = router;

@@ -2,11 +2,32 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const cubeSchema = new Schema({
-    name: String,
-    description: String,
-    difficultyLevel: Number,
-    imageUrl: String,
-    accessories: [{ type: Schema.Types.ObjectId, ref: 'Accessory' }],
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true,
+        maxLength: 120
+    },
+    imageUrl: {
+        type: String,
+        required: true,
+        validate: /^https?:\/\//
+    },
+    difficultyLevel: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 6
+    },
+    accessories: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Accessory'
+        }
+    ],
 });
 
 const Cube = mongoose.model('Cube', cubeSchema);

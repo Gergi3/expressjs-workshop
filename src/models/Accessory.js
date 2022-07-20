@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
 
 const accessorySchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    imageUrl: String,
+    name: { 
+        type: String,
+        required: true
+    },
+    imageUrl: {
+        type: String,
+        required: true,
+        validate: /^https?:\/\//
+    },
+    description: {
+        type: String,
+        required: true,
+        max: 120
+    },
 });
 
 const Accessory = mongoose.model('Accessory', accessorySchema);

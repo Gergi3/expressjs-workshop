@@ -5,7 +5,7 @@
     {{#if hasAllAccessories}}
         <h3 class="italic">This cube has all available accessories so far or there is no available at all...</h3>
     {{else}}
-        <form action="/accessory/attach/{{cube._id}}" method="POST">
+        <form method="POST">
             <label for="accessory">Accessories</label>
             <select id="accessory" name="id">
                 {{#each accessories}}
