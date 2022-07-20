@@ -3,6 +3,7 @@ const router = express.Router();
 
 const cubeServices = require('../services/cubeServices');
 const accessoryServices = require('../services/accessoryServices');
+const mongooseServices = require('../services/mongooseServices');
 
 router.get('/create', (req, res) => {
     res.render('createCube');
@@ -37,7 +38,7 @@ router.get('/attach-accessory/:cubeId', async (req, res) => {
     
     res.render('attachAccessory', {
         cube: cube.toObject(),
-        accessories,
+        accessories: mongooseServices.mapToObjects(accessories),
         hasAllAccessories: accessories.length == 0,
     });
 });

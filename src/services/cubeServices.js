@@ -7,7 +7,7 @@ exports.getById = (id) => Cube.findById(id);
 exports.getByIdPopulatedAcessories = (id) => Cube.findById(id).populate('accessories');
 
 exports.getAll = async (search, from, to) => {
-    query = {
+    const query = {
         $and: [
             { name: { $regex: search || '', $options: 'i' } },
             { difficultyLevel: { $gte: Number(from) || 1 } },
@@ -15,10 +15,7 @@ exports.getAll = async (search, from, to) => {
         ]
     };
 
-    const cubes = await Cube.find(query);
-    const cubesArray = cubes.map(cube => cube.toObject());
-
-    return cubesArray;
+    return Cube.find(query);
 };
 
 exports.addAccessory = (cubeId, accessoryId) => {
