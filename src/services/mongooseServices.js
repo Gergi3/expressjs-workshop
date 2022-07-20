@@ -1,0 +1,1 @@
+exports.mapToObjects = (docs) => docs.map(doc => doc.toObject());
