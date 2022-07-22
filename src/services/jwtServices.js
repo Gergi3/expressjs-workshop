@@ -10,7 +10,7 @@ exports.signToken = (data) => {
     return token;
 } 
 
-exports.verifyToken = (token, callback) =>{
+exports.verifyToken = (token) =>{
     const callback = (err, decoded) => {
         if (err) {
             return false;
