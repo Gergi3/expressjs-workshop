@@ -15,7 +15,6 @@ router.post('/register', async (req, res) => {
 
         res.redirect('login');
     } catch (err) {
-        console.log(err.message || err);
         res.redirect('register');
     }
 });
@@ -30,11 +29,9 @@ router.post('/login', async (req, res) => {
 
     try {
         const sessionToken = await authServices.login(username, password);
-        console.log(sessionToken);
         res.cookie('session-token', sessionToken);
         res.redirect('/');
     } catch (err) {
-        console.log(err);
         res.redirect('login');
     }
 });
