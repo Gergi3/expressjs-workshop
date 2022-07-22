@@ -1,9 +1,13 @@
-const { app, port, initConfig } = require('./config/express');
-const connectToDb = require('./config/database');
-const setupHandlebars = require('./config/handlebars');
+const { app, port, initConfig } = require('./config/expressConfig');
+const connectToDb = require('./config/databaseConfig');
+const setupHandlebars = require('./config/handlebarsConfig');
+const setupMiddlewares = require('./config/middlewaresConfig');
+const setupRouting = require('./config/routingConfig');
 
 initConfig();
 setupHandlebars(app);
+setupMiddlewares(app);
+setupRouting(app);
 
 connectToDb(app)
     .then(() => {
