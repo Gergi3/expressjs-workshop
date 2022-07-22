@@ -3,6 +3,7 @@ const express = require('express');
 const { homeRouter } = require('./controllers/homeController');
 const { accessoryRouter } = require('./controllers/accessoryController');
 const { cubeRouter } = require('./controllers/cubeController');
+const { authRouter } = require('./controllers/authController');
 const { aboutRouter } = require('./controllers/aboutController');
 const { errorRouter } = require('./controllers/errorController');
 
@@ -12,6 +13,7 @@ router.use('/', homeRouter);
 router.use('/about', aboutRouter);
 router.use('/cube', cubeRouter);
 router.use('/accessory', accessoryRouter);
+router.use('/auth', authRouter);
 router.use('/', errorRouter);
 
 exports.router = router;
