@@ -42,3 +42,7 @@ exports.login = async (username, password) => {
 
     return await jwtServices.signToken({ username });
 }
+
+exports.isLogged = (token) => {
+    return jwtServices.verifyToken(token);
+}

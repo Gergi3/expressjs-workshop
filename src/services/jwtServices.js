@@ -10,4 +10,13 @@ exports.signToken = (data) => {
     return token;
 } 
 
-exports.decodeToken = (token) => jwt.verify(token, secret);
+exports.verifyToken = (token, callback) =>{
+    const callback = (err, decoded) => {
+        if (err) {
+            return false;
+        }
+        return decoded;
+    }
+
+    return jwt.verify(token, secret, callback);
+} 
