@@ -13,17 +13,31 @@ router.post('/register', async (req, res) => {
     try {
         const user = await authServices.register(username, password, repassword);
 
-        if (user) {
-            res.redirect('login');
-        } else {
-            res.redirect('register');
-        }
+        res.redirect('login');
     } catch (err) {
         console.log(err.message || err);
         res.redirect('register');
     }
-
-
 });
+
+
+router.get('/login', (req, res) => {
+    res.render('auth/login');
+});
+
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const sessionToken = await authServices.login(username, password);
+        console.log(sessionToken);
+        res.cookie('session-token', sessionToken);
+        res.redirect('/');
+    } catch (err) {
+        console.log(err);
+        res.redirect('login');
+    }
+});
+
 
 exports.authRouter = router;
