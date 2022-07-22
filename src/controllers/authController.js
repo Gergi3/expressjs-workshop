@@ -39,5 +39,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/logout', async (req, res) => {
+    res.clearCookie('session-token');
+    res.redirect('/');
+});
+
 
 exports.authRouter = router;
