@@ -40,7 +40,10 @@ exports.login = async (username, password) => {
         throw new Error('Invalid username or password')
     }
 
-    return await jwtServices.signToken({ username });
+    return await jwtServices.signToken({ 
+        _id: user._id,
+        username
+    });
 }
 
 exports.isLogged = (token) => {

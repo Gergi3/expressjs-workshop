@@ -10,6 +10,7 @@ router.get('/create', (req, res) => {
 });
 
 router.post('/create', (req, res) => {
+    req.body.user = req.session._id;
     const newCube = cubeServices.create(req.body);
 
     newCube.save()
