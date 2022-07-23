@@ -18,6 +18,8 @@ exports.getAll = async (search, from, to) => {
     return Cube.find(query);
 };
 
+exports.delete = (cubeId) => Cube.findByIdAndDelete(cubeId);
+
 exports.addAccessory = (cubeId, accessoryId) => {
     const query = {
         $push: {
@@ -26,4 +28,9 @@ exports.addAccessory = (cubeId, accessoryId) => {
     };
 
     return Cube.findByIdAndUpdate(cubeId, query);
+}
+
+exports.isAuthorized = async (cubeId, userId) => {
+    const cube = await Cube.findById(cubeId);
+    return cube.user == userId;
 }
