@@ -14,6 +14,6 @@ router.use('/about', aboutRouter);
 router.use('/cube', cubeRouter);
 router.use('/accessory', accessoryRouter);
 router.use('/auth', authRouter);
-router.use('/', errorRouter);
+router.use('*', errorRouter);
 
 exports.router = router;
