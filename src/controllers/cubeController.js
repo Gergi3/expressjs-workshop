@@ -72,9 +72,35 @@ router.post('/delete/:cubeId', async (req, res) => {
     }
 });
 
-router.get('/edit/:cubeId', (req, res) => {
+router.get('/edit/:cubeId', async (req, res) => {
+    const cubeId = req.params.cubeId;
+    const userId = req.session._id;
     
-})
+    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
+    if (!isAuthorized) {
+        res.redirect('/404');
+        return;
+    }
+
+    const cube = await cubeServices.getById(cubeId);
+    res.render('cube/edit', {
+        cube: cube.toObject()
+    });
+});
+
+router.post('/edit/:cubeId', async (req, res) => {
+    const cubeId = req.params.cubeId;
+    const userId = req.session._id;
+    
+    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
+    if (!isAuthorized) {
+        res.redirect('/404');
+        return;
+    }
+
+    await cubeServices.updateById(cubeId, req.body);
+    res.redirect(`/cube/details/${cubeId}`);
+});
 
 router.get('/attach-accessory/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;

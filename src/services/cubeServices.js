@@ -20,6 +20,8 @@ exports.getAll = async (search, from, to) => {
 
 exports.delete = (cubeId) => Cube.findByIdAndDelete(cubeId);
 
+exports.updateById = (cubeId, body) => Cube.findByIdAndUpdate(cubeId, body); 
+
 exports.addAccessory = (cubeId, accessoryId) => {
     const query = {
         $push: {
