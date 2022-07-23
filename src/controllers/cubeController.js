@@ -6,10 +6,20 @@ const accessoryServices = require('../services/accessoryServices');
 const mongooseServices = require('../services/mongooseServices');
 
 router.get('/create', (req, res) => {
+    if (!req.session) {
+        res.redirect('/auth/login');
+        return;
+    }
+    
     res.render('cube/create');
 });
 
 router.post('/create', (req, res) => {
+    if (!req.session) {
+        res.redirect('/auth/login');
+        return;
+    }
+
     req.body.user = req.session._id;
     const newCube = cubeServices.create(req.body);
 
@@ -33,6 +43,11 @@ router.get('/details/:cubeId', async (req, res) => {
 });
 
 router.get('/attach-accessory/:cubeId', async (req, res) => {
+    if (!req.session) {
+        res.redirect('/auth/login');
+        return;
+    }
+
     const cubeId = req.params.cubeId;
     const cube = await cubeServices.getById(cubeId);
     const accessories = await accessoryServices.getAllExcept(cube.accessories);
@@ -45,6 +60,11 @@ router.get('/attach-accessory/:cubeId', async (req, res) => {
 });
 
 router.post('/attach-accessory/:cubeId', async (req, res) => {
+    if (!req.session) {
+        res.redirect('/auth/login');
+        return;
+    }
+
     const cubeId = req.params.cubeId;
     const accessoryId = req.body.id;
     await cubeServices.addAccessory(cubeId, accessoryId);

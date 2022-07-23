@@ -4,10 +4,20 @@ const router = express.Router();
 const authServices = require('../services/authServices');
 
 router.get('/register', (req, res) => {
+    if (req.session) {
+        res.redirect('/');
+        return;
+    }
+
     res.render('auth/register');
 });
 
 router.post('/register', async (req, res) => {
+    if (req.session) {
+        res.redirect('/');
+        return;
+    }
+
     const { username, password, repassword } = req.body;
 
     try {
@@ -21,10 +31,20 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/login', (req, res) => {
+    if (req.session) {
+        res.redirect('/');
+        return;
+    }
+    
     res.render('auth/login');
 });
 
 router.post('/login', async (req, res) => {
+    if (req.session) {
+        res.redirect('/');
+        return;
+    }
+    
     const { username, password } = req.body;
 
     try {
@@ -37,6 +57,11 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', async (req, res) => {
+    if (!req.session) {
+        res.redirect('/auth/login');
+        return;
+    }
+
     res.clearCookie('session-token');
     res.redirect('/');
 });
