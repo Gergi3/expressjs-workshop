@@ -1,24 +1,17 @@
 const express = require('express');
 
 const accessoryServices = require('../services/accessoryServices');
+const authenticateMiddleware = require('../middlewares/authenticateMiddleware');
 
 const router = express.Router();
 
-router.get('/create', (req, res) => {
-    if (!req.session) {
-        res.redirect('/auth/login');
-        return;
-    }
+router.use(authenticateMiddleware);
 
+router.get('/create', (req, res) => {
     res.render('accessory/create');
 });
 
 router.post('/create', (req, res) => {
-    if (!req.session) {
-        res.redirect('/auth/login');
-        return;
-    }
-
     const newAccessory = accessoryServices.create(req.body);
 
     newAccessory.save()
@@ -29,7 +22,5 @@ router.post('/create', (req, res) => {
             res.redirect('/404');
         })
 });
-
-
 
 exports.accessoryRouter = router;

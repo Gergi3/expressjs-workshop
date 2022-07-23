@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authServices = require('../services/authServices');
+const authenticateMiddleware = require('../middlewares/authenticateMiddleware');
 
 router.get('/register', (req, res) => {
     if (req.session) {
@@ -56,12 +57,9 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/logout', async (req, res) => {
-    if (!req.session) {
-        res.redirect('/auth/login');
-        return;
-    }
+router.use(authenticateMiddleware);
 
+router.get('/logout', async (req, res) => {
     res.clearCookie('session-token');
     res.redirect('/');
 });
