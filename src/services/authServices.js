@@ -2,7 +2,6 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwtServices = require('./jwtServices');
 
-
 const saltRounds = 10;
 
 exports.register = async (username, password, repassword) => {
@@ -12,16 +11,16 @@ exports.register = async (username, password, repassword) => {
         throw new Error('User with same username found');
     }
 
-    if (password == '') {
+    if (password === '') {
         throw new Error('Password cant be empty')
     }
 
-    if (password != repassword) {
+    if (password !== repassword) {
         throw new Error('Password should match Re-Password');
     }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const user = await User.create({
+    const user = User.create({
         username,
         password: hashedPassword
     });
@@ -40,7 +39,7 @@ exports.login = async (username, password) => {
         throw new Error('Invalid username or password')
     }
 
-    return await jwtServices.signToken({ 
+    return jwtServices.signToken({ 
         _id: user._id,
         username
     });

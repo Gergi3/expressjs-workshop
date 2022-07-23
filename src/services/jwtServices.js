@@ -6,17 +6,28 @@ exports.signToken = (data) => {
     const options = {
         expiresIn: '2d',
     }
-    const token = jwt.sign(payload, secret, options);
-    return token;
+
+    const promise = new Promise((resolve, reject) => {
+        jwt.sign(payload, secret, options, (err, token) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(token);
+        });
+    });
+    
+    return promise;
 } 
 
 exports.verifyToken = (token) =>{
-    const callback = (err, decoded) => {
-        if (err) {
-            return false;
-        }
-        return decoded;
-    }
+    const promise = new Promise((resolve, reject) => {
+        jwt.verify(token, secret, (err, decoded) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(decoded);
+        });
+    });
 
-    return jwt.verify(token, secret, callback);
+    return promise;
 } 

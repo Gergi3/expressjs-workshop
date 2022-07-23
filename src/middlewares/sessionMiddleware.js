@@ -1,8 +1,11 @@
 const { isLogged } = require('../services/authServices');
 
 module.exports = (app) => {
-    app.use((req, res, next) => {
-        req.session = isLogged(req.cookies['session-token']);
+    app.use(async (req, res, next) => {
+        const token = req.cookies['session-token'];
+        if (token) {
+            req.session = await isLogged(token);
+        }
         next();
     });
 }
