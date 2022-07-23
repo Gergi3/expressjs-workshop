@@ -3,22 +3,20 @@ const router = express.Router();
 
 const authServices = require('../services/authServices');
 const authenticateMiddleware = require('../middlewares/authenticateMiddleware');
+const unauthenticateMiddleware = require('../middlewares/unauthenticateMiddleware')
+
+router.get('/logout', authenticateMiddleware, async (req, res) => {
+    res.clearCookie('session-token');
+    res.redirect('/');
+});
+
+router.use(unauthenticateMiddleware);
 
 router.get('/register', (req, res) => {
-    if (req.session) {
-        res.redirect('/');
-        return;
-    }
-
     res.render('auth/register');
 });
 
 router.post('/register', async (req, res) => {
-    if (req.session) {
-        res.redirect('/');
-        return;
-    }
-
     const { username, password, repassword } = req.body;
 
     try {
@@ -32,20 +30,10 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/login', (req, res) => {
-    if (req.session) {
-        res.redirect('/');
-        return;
-    }
-    
     res.render('auth/login');
 });
 
-router.post('/login', async (req, res) => {
-    if (req.session) {
-        res.redirect('/');
-        return;
-    }
-    
+router.post('/login', async (req, res) => {    
     const { username, password } = req.body;
 
     try {
@@ -56,13 +44,5 @@ router.post('/login', async (req, res) => {
         res.redirect('login');
     }
 });
-
-router.use(authenticateMiddleware);
-
-router.get('/logout', async (req, res) => {
-    res.clearCookie('session-token');
-    res.redirect('/');
-});
-
 
 exports.authRouter = router;

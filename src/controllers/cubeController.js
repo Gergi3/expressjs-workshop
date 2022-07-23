@@ -8,11 +8,15 @@ const authenticateMiddleware = require('../middlewares/authenticateMiddleware');
 
 router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
+    const userId = req.session._id
+    
     const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
+    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
 
     res.render('cube/details', {
         cube: cube.toObject(),
         hasAccessories: cube.accessories.length > 0,
+        isAuthorized
     });
 });
 
