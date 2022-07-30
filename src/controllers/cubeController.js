@@ -4,7 +4,7 @@ const router = express.Router();
 const cubeServices = require('../services/cubeServices');
 const accessoryServices = require('../services/accessoryServices');
 const mongooseServices = require('../services/mongooseServices');
-const authenticateMiddleware = require('../middlewares/authenticateMiddleware');
+const isAuthenticated = require('../middlewares/authenticateMiddleware');
 
 router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
@@ -20,13 +20,11 @@ router.get('/details/:cubeId', async (req, res) => {
     });
 });
 
-router.use(authenticateMiddleware);
-
-router.get('/create', (req, res) => {
+router.get('/create', isAuthenticated, (req, res) => {
     res.render('cube/create');
 });
 
-router.post('/create', (req, res) => {
+router.post('/create', isAuthenticated, (req, res) => {
     req.body.user = req.session._id;
     const newCube = cubeServices.create(req.body);
 
@@ -41,7 +39,7 @@ router.post('/create', (req, res) => {
 
 
 
-router.get('/delete/:cubeId', async (req, res) => {
+router.get('/delete/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     
@@ -58,7 +56,7 @@ router.get('/delete/:cubeId', async (req, res) => {
     });
 });
 
-router.post('/delete/:cubeId', async (req, res) => {
+router.post('/delete/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     
@@ -72,7 +70,7 @@ router.post('/delete/:cubeId', async (req, res) => {
     res.redirect('/');
 });
 
-router.get('/edit/:cubeId', async (req, res) => {
+router.get('/edit/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     
@@ -88,7 +86,7 @@ router.get('/edit/:cubeId', async (req, res) => {
     });
 });
 
-router.post('/edit/:cubeId', async (req, res) => {
+router.post('/edit/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     
@@ -102,7 +100,7 @@ router.post('/edit/:cubeId', async (req, res) => {
     res.redirect(`/cube/details/${cubeId}`);
 });
 
-router.get('/attach-accessory/:cubeId', async (req, res) => {
+router.get('/attach-accessory/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     
@@ -122,7 +120,7 @@ router.get('/attach-accessory/:cubeId', async (req, res) => {
     });
 });
 
-router.post('/attach-accessory/:cubeId', async (req, res) => {
+router.post('/attach-accessory/:cubeId', isAuthenticated, async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session._id;
     const accessoryId = req.body.id;
