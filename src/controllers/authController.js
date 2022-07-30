@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 const authServices = require('../services/authServices');
-const isAuthenticated = require('../middlewares/authenticateMiddleware');
-const isUnauthenticated = require('../middlewares/unauthenticateMiddleware')
+const { isAuth } = require('../middlewares/authMiddlewares');
+const { isUnauth } = require('../middlewares/authMiddlewares')
 
-router.get('/logout', isAuthenticated, async (req, res) => {
+router.get('/logout', isAuth, async (req, res) => {
     res.clearCookie('session-token');
     res.redirect('/');
 });
 
-router.get('/register', isUnauthenticated, (req, res) => {
+router.get('/register', isUnauth, (req, res) => {
     res.render('auth/register');
 });
 
-router.post('/register', isUnauthenticated, async (req, res) => {
+router.post('/register', isUnauth, async (req, res) => {
     const { username, password, repassword } = req.body;
 
     try {
@@ -27,11 +27,11 @@ router.post('/register', isUnauthenticated, async (req, res) => {
 });
 
 
-router.get('/login', isUnauthenticated, (req, res) => {
+router.get('/login', isUnauth, (req, res) => {
     res.render('auth/login');
 });
 
-router.post('/login', isUnauthenticated, async (req, res) => {    
+router.post('/login', isUnauth, async (req, res) => {    
     const { username, password } = req.body;
 
     try {

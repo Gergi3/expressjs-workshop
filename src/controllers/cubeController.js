@@ -4,13 +4,12 @@ const router = express.Router();
 const cubeServices = require('../services/cubeServices');
 const accessoryServices = require('../services/accessoryServices');
 const mongooseServices = require('../services/mongooseServices');
-const isAuthenticated = require('../middlewares/authenticateMiddleware');
+const { isAuth } = require('../middlewares/authMiddlewares');
+const { isOwner } = require('../middlewares/cubeMiddlewares');
 
 router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session?._id
-    console.log(cubeId);
-    console.log(userId);
     
     const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
     const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
@@ -22,11 +21,11 @@ router.get('/details/:cubeId', async (req, res) => {
     });
 });
 
-router.get('/create', isAuthenticated, (req, res) => {
+router.get('/create', isAuth, (req, res) => {
     res.render('cube/create');
 });
 
-router.post('/create', isAuthenticated, (req, res) => {
+router.post('/create', isAuth, (req, res) => {
     req.body.user = req.session._id;
     const newCube = cubeServices.create(req.body);
 
@@ -39,18 +38,7 @@ router.post('/create', isAuthenticated, (req, res) => {
         });
 });
 
-
-
-router.get('/delete/:cubeId', isAuthenticated, async (req, res) => {
-    const cubeId = req.params.cubeId;
-    const userId = req.session._id;
-    
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
-
+router.get('/delete/:cubeId', isAuth, isOwner, async (req, res) => {
     const cube = await cubeServices.getById(cubeId);
 
     res.render('cube/delete', { 
@@ -58,29 +46,15 @@ router.get('/delete/:cubeId', isAuthenticated, async (req, res) => {
     });
 });
 
-router.post('/delete/:cubeId', isAuthenticated, async (req, res) => {
+router.post('/delete/:cubeId', isAuth, isOwner, async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id;
-    
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
 
     await cubeServices.delete(cubeId);
     res.redirect('/');
 });
 
-router.get('/edit/:cubeId', isAuthenticated, async (req, res) => {
+router.get('/edit/:cubeId', isAuth, isOwner, async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id;
-    
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
 
     const cube = await cubeServices.getById(cubeId);
     res.render('cube/edit', {
@@ -88,29 +62,15 @@ router.get('/edit/:cubeId', isAuthenticated, async (req, res) => {
     });
 });
 
-router.post('/edit/:cubeId', isAuthenticated, async (req, res) => {
+router.post('/edit/:cubeId', isAuth, isOwner, async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id;
     
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
-
     await cubeServices.updateById(cubeId, req.body);
     res.redirect(`/cube/details/${cubeId}`);
 });
 
-router.get('/attach-accessory/:cubeId', isAuthenticated, async (req, res) => {
+router.get('/attach-accessory/:cubeId', isAuth, isOwner, async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id;
-    
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
 
     const cube = await cubeServices.getById(cubeId);
     const accessories = await accessoryServices.getAllExcept(cube.accessories);
@@ -122,17 +82,10 @@ router.get('/attach-accessory/:cubeId', isAuthenticated, async (req, res) => {
     });
 });
 
-router.post('/attach-accessory/:cubeId', isAuthenticated, async (req, res) => {
+router.post('/attach-accessory/:cubeId', isAuth, isOwner, async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id;
     const accessoryId = req.body.id;
     
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
-    if (!isAuthorized) {
-        res.redirect('/404');
-        return;
-    }
-
     await cubeServices.addAccessory(cubeId, accessoryId);
 
     res.redirect(`/cube/details/${cubeId}`);

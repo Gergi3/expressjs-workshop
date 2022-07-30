@@ -1,5 +1,5 @@
 const cookieParser = require('../middlewares/cookieParserMiddleware');
-const session = require('../middlewares/sessionMiddleware');
+const { session } = require('../middlewares/authMiddlewares');
 
 module.exports = (app) => {
     cookieParser(app);

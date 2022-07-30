@@ -1,15 +1,15 @@
 const express = require('express');
 
 const accessoryServices = require('../services/accessoryServices');
-const isAuthenticated = require('../middlewares/authenticateMiddleware');
+const { isAuth } = require('../middlewares/authMiddlewares');
 
 const router = express.Router();
 
-router.get('/create', isAuthenticated, (req, res) => {
+router.get('/create', isAuth, (req, res) => {
     res.render('accessory/create');
 });
 
-router.post('/create', isAuthenticated, (req, res) => {
+router.post('/create', isAuth, (req, res) => {
     const newAccessory = accessoryServices.create(req.body);
 
     newAccessory.save()
