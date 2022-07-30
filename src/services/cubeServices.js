@@ -34,5 +34,8 @@ exports.addAccessory = (cubeId, accessoryId) => {
 
 exports.isAuthorized = async (cubeId, userId) => {
     const cube = await Cube.findById(cubeId);
+    if (!cube.user || !userId || !cubeId) {
+        return false;
+    }
     return cube.user == userId;
 }

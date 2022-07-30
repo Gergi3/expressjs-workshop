@@ -8,7 +8,9 @@ const isAuthenticated = require('../middlewares/authenticateMiddleware');
 
 router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
-    const userId = req.session._id
+    const userId = req.session?._id
+    console.log(cubeId);
+    console.log(userId);
     
     const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
     const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);

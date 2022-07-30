@@ -1,8 +1,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwtServices = require('./jwtServices');
+const { saltRounds } = require('../constants');
 
-const saltRounds = 10;
 
 exports.register = async (username, password, repassword) => {
     const users = await User.find({username});
@@ -45,6 +45,4 @@ exports.login = async (username, password) => {
     });
 }
 
-exports.isLogged = (token) => {
-    return jwtServices.verifyToken(token);
-}
+exports.isLogged = (token) => jwtServices.verifyToken(token);
