@@ -9,14 +9,12 @@ const { isAuth } = require('../middlewares/authMiddlewares');
 router.get('/details/:cubeId', async (req, res) => {
     const cubeId = req.params.cubeId;
     const userId = req.session?._id
-    
     const cube = await cubeServices.getByIdPopulatedAcessories(cubeId);
-    const isAuthorized = await cubeServices.isAuthorized(cubeId, userId);
 
     res.render('cube/details', {
         cube: cube.toObject(),
         hasAccessories: cube.accessories.length > 0,
-        isAuthorized
+        isOwner: cube.user == userId
     });
 });
 
@@ -24,17 +22,15 @@ router.get('/create', isAuth, (req, res) => {
     res.render('cube/create');
 });
 
-router.post('/create', isAuth, (req, res) => {
+router.post('/create', isAuth, async     (req, res) => {
     req.body.user = req.session._id;
     const newCube = cubeServices.create(req.body);
-
-    newCube.save()
-        .then(() => {
-            res.redirect('/');
-        })
-        .catch(() => {
-            res.redirect('/404');
-        });
+    try {
+        await newCube.save()
+        res.redirect('/');
+    } catch {
+        res.redirect('/404');
+    }
 });
 
 router.get('/delete/:cubeId', isAuth, async (req, res) => {

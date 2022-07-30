@@ -5,7 +5,10 @@ exports.session = (app) => {
         const token = req.cookies['session-token'];
         if (token) {
             try {
-                req.session = await isLogged(token);
+                const decodedToken = await isLogged(token);
+
+                req.session = decodedToken;
+                res.locals.session = decodedToken; 
             } catch (err) {
                 res.redirect('/auth/logout');
             }
@@ -16,8 +19,7 @@ exports.session = (app) => {
 
 exports.isAuth = (req, res, next) => {
     if (!req.session) {
-        res.redirect('/auth/login');
-        return;
+        return res.redirect('/auth/login');
     } else {
         next();
     }
@@ -25,8 +27,7 @@ exports.isAuth = (req, res, next) => {
 
 exports.isUnauth = (req, res, next) => {
     if (req.session) {
-        res.redirect('/');
-        return;
+        return res.redirect('/');
     } else {
         next();
     }
