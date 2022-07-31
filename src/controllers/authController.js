@@ -8,18 +8,14 @@ router.get('/register', isUnauth, (req, res) => {
     res.render('auth/register');
 });
 
-router.post('/register', isUnauth, async (req, res) => {
+router.post('/register', isUnauth, async (req, res, next) => {
     try {
         await authServices.register(req.body);
 
         res.redirect('login');
     } catch (err) {
-        if (!err.messages) {
-            throw err;
-        }
-
-        res.locals.error = err; 
-        res.render('auth/register');
+        err.path = 'auth/register';
+        next(err);
     }
 });
 
