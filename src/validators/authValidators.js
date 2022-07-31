@@ -24,7 +24,7 @@ async function isValidUsername(username) {
     }
 
     const isEmail = validator.isEmail(username)
-    const isEnglishOrDigits = username.match(/[A-z0-9]+/);
+    const isEnglishOrDigits = username.match(/^[A-z0-9]+$/);
     const isGTEFive = username.length >= 5;
     const isAlreadyRegistered = await User.findOne({username});
 
@@ -44,7 +44,7 @@ function isValidPassword(password, repassword) {
         return ['Password should not be empty'];
     }
 
-    const isEnglishOrDigits = password.match(/[A-z0-9]+/);
+    const isEnglishOrDigits = password.match(/^[A-z0-9]+$/);
     const isGTEEight = password.length > 8;
     const passwordsMatch = password == repassword;
         
