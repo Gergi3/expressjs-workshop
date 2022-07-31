@@ -28,7 +28,7 @@ async function isValidUsername(username) {
     const isGTEFive = username.length >= 5;
     const isAlreadyRegistered = await User.findOne({username});
 
-    match(isAlreadyRegistered, 'User with same username found', messages);
+    match(!isAlreadyRegistered, 'User with same username found', messages);
     match(isEmail, 'Username should be a valid email', messages);
     match(isEnglishOrDigits, 'Username should consist only of English letters and digits', messages);
     match(isGTEFive, 'Username should be greater than five characters', messages);
