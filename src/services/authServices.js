@@ -1,23 +1,13 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const jwtServices = require('./jwtServices');
 const { saltRounds } = require('../constants');
+const jwtServices = require('./jwtServices');
+const validators = require('../utils/authValidators');
 
-
-exports.register = async (username, password, repassword) => {
+exports.register = async ({username, password, repassword}) => {
     const users = await User.find({username});
-
-    if (users.length > 0) {
-        throw new Error('User with same username found');
-    }
-
-    if (password === '') {
-        throw new Error('Password cant be empty')
-    }
-
-    if (password !== repassword) {
-        throw new Error('Password should match Re-Password');
-    }
+    
+    await validators.validateRegister(username, password, repassword);
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const user = User.create({

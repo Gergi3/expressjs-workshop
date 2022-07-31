@@ -2,27 +2,24 @@ const express = require('express');
 const router = express.Router();
 
 const authServices = require('../services/authServices');
-const { isAuth } = require('../middlewares/authMiddlewares');
-const { isUnauth } = require('../middlewares/authMiddlewares')
-
-router.get('/logout', isAuth, async (req, res) => {
-    res.clearCookie('session-token');
-    res.redirect('/');
-});
+const { isAuth, isUnauth } = require('../middlewares/authMiddlewares');
 
 router.get('/register', isUnauth, (req, res) => {
     res.render('auth/register');
 });
 
 router.post('/register', isUnauth, async (req, res) => {
-    const { username, password, repassword } = req.body;
-
     try {
-        const user = await authServices.register(username, password, repassword);
+        await authServices.register(req.body);
 
         res.redirect('login');
     } catch (err) {
-        res.redirect('register');
+        if (!err.messages) {
+            throw err;
+        }
+
+        res.locals.error = err; 
+        res.render('auth/register');
     }
 });
 
@@ -41,6 +38,11 @@ router.post('/login', isUnauth, async (req, res) => {
     } catch (err) {
         res.redirect('login');
     }
+});
+
+router.get('/logout', isAuth, async (req, res) => {
+    res.clearCookie('session-token');
+    res.redirect('/');
 });
 
 exports.authRouter = router;
